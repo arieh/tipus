@@ -14,7 +14,6 @@ nav.main button {
 }
 
 .page {
-    display: none;
 }
 
 body>.forms {
@@ -29,4 +28,8 @@ tr .route input{
 
 .table td {
     text-align: right;
+}
+
+form input[type=text], form input[type=number] {
+    height: 30px;
 }

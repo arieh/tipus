@@ -18,10 +18,12 @@ function init(){
     $('form.login').remove();
 
     Data.fetchAll(function(){
-        var cat = Data.collections.Category.models[0];
+        /*var cat = Data.collections.Category.models[0];
 
         var per = new Stage.Perliminary({category:cat, route_number:4});
-        $(document.body).append(per.$el);
+        $(document.body).append(per.$el);*/
+
+        Page.show(new CategoryList());
     });
 }
 

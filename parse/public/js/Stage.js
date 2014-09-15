@@ -15,7 +15,7 @@ Stage.Perliminary = Backbone.View.extend({
 
     initialize : function(args){
         this.category = args.category;
-        this.route_num = args.route_number;
+        this.route_num = args.route_number || 5;
         
         this.routes = [];
         this.climbers = {};
@@ -165,7 +165,7 @@ Stage.Perliminary = Backbone.View.extend({
         }
 
         score = genMin(this.scores[id]);
-
+        score = +(parseFloat(score).toFixed(3));
         climber.set('score',score);
         climber.save();
         score_el.html(score);

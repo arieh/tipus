@@ -14,23 +14,11 @@
       <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
   </head>
   <body>
-    <form class="login modal hide fade" action="javascript:;">
-        <div class="modal-header">
-            <h3 id="myModalLabel">כניסה</h3>
-        </div>
-        <div class="modal-body">
-            <h4>שם משתמש</h4>
-            <input class="user" type="text" />
-            <h4>ססמה</h4>
-            <input class="pass" type="password" />
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary submit" data-dismiss="modal">Login</button>
-        </div>
-    </form>
     <div class="app row container">
             <div class="row">
                 <nav class="span2 main">
+                    <ul>
+                    </ul>
                 </nav>
                 <section class="span10 main">
                     <!--Body content-->
@@ -38,7 +26,22 @@
             </div>
     </div>
 
-        <form class="classes-add-form modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
+        <form class="login modal hide fade" action="javascript:;">
+            <div class="modal-header">
+                <h3 id="myModalLabel">כניסה</h3>
+            </div>
+            <div class="modal-body">
+                <h4>שם משתמש</h4>
+                <input class="user" type="text" />
+                <h4>ססמה</h4>
+                <input class="pass" type="password" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary submit" data-dismiss="modal">Login</button>
+            </div>
+        </form>
+
+        <form class="category-add-form modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="myModalLabel">הוסף מקצה</h3>
@@ -46,26 +49,27 @@
             <div class="modal-body">
                 <h4>שם</h4>
                 <input type="text" name="name" />
+                <h4>מספר מתמודדים לחצי גמר</h4>
+                <input type="number" name="semi_finals_climbers"/>
+                <h4>מספר מתמודדים לגמר</h4>
+                <input type="number" name="finals_climbers" />
             </div>
             <div class="modal-footer">
                 <button class="btn cancel" data-dismiss="modal" aria-hidden="true">Close</button>
                 <button class="btn btn-primary" data-dismiss="modal">Save changes</button>
             </div>
         </form>
-
     <script type="text/javascript">
         var dictionary = {
             singular :{
                 Category : 'מקצה',
-                routes : 'מסלול',
                 Climber : 'מתחרה',
                 Stage : 'שלב'
             },
             plural : {
                 Category : 'מקצים',
-                routes : 'מסלולים',
-                users : 'מתחרים',
-                stage : 'שלבים'
+                Climber : 'מתחרים',
+                Stage : 'שלבים'
             },
             climber : {
                 name : 'שם',
@@ -73,8 +77,17 @@
                 cat : 'קטגוריה',
                 route : 'מסלול מס׳',
                 score : 'ניקוד'
-                Climber : 'מתחרים',
-                Stage : 'שלבים'
+            },
+            Category : {
+                add : 'הוסף מקצה',
+                start : 'התחל מוקדמות',
+                perliminary : 'מוקדמות',
+                semi : '',
+                semi1 : '',
+                semi2 : '',
+                final : '',
+                final1: '',
+                final2 : ''
             }
         } ;
     </script>
@@ -83,6 +96,7 @@
     <script type="text/javascript" src="js/Page.js"></script>
     <script type="text/javascript" src="js/Nav.js"></script>
     <script type="text/javascript" src="js/Stage.js"></script>
+    <script type="text/javascript" src="js/Category.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
   </body>
 </html>

@@ -31,3 +31,10 @@ Data.fetchAll = function(cb){
 
     fetch();
 };
+
+
+Data.create = function(type, data) {
+    var model = new Data.models[type](data);
+
+    model.save();
+};
