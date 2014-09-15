@@ -6,4 +6,3 @@ var Page = {
 };
 
 var el = $('section.main');
-Page.types.classes = new Class({el : el});

@@ -20,3 +20,13 @@ nav.main button {
 body>.forms {
     display: none;
 }
+tr .route {
+    width: 50px;
+}
+tr .route input{
+    width: 50px;
+}
+
+.table td {
+    text-align: right;
+}

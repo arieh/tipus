@@ -1,9 +1,9 @@
 
 Parse.initialize("SQa6ZzYOcMMIO9uDvvkcxUksxcoBztIbvBgiHZVt", "WVrICdMNw7S96fY1FSxYwxUQq24ucMcw5YpyWm1i");
 
-$('form.login').modal('show');
+//$('form.login').modal('show');
 
-$('form.login').on('submit', function(){
+$('form.login .submit').on('click', function(){
     var name = $('.login .user').val(),
         pass = $('.login .pass').val();
 
@@ -12,11 +12,16 @@ $('form.login').on('submit', function(){
     });
 });
 
+init();
+
 function init(){
     $('form.login').remove();
 
     Data.fetchAll(function(){
-        showApp();
+        var cat = Data.collections.Category.models[0];
+
+        var per = new Stage.Perliminary({category:cat, route_number:4});
+        $(document.body).append(per.$el);
     });
 }
 
