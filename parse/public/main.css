@@ -1,0 +1,22 @@
+.app {
+    /*display: none;*/
+}
+
+[class*="span"] {
+    float: right;
+    min-height: 1px;
+    margin-right: 20px;
+    margin-left:0;
+}
+
+nav.main button {
+    width:100%;
+}
+
+.page {
+    display: none;
+}
+
+body>.forms {
+    display: none;
+}

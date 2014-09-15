@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "_default": {
+            "link": "tipus"
+        }, 
+        "tipus": {
+            "applicationId": "SQa6ZzYOcMMIO9uDvvkcxUksxcoBztIbvBgiHZVt", 
+            "masterKey": "oKR2tA2lflsQEZvCFbVMgvL2KEK3fdk3THDIt5kJ"
+        }
+    }
+}

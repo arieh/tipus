@@ -1,0 +1,79 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>My ParseApp site</title>
+      <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.2.0-rc2/css/bootstrap-rtl.min.css">
+      <link rel="stylesheet" href="main.css"/><meta charset="UTF-8">
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+      <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.0.min.js"></script>
+      <script type="text/javascript" src="bower_components/jquery/jquery.js"></script>
+      <script type="text/javascript" src="bower_components/underscore/underscore-min.js"></script>
+      <script type="text/javascript" src="bower_components/backbone/backbone.js"></script>
+      <script type="text/javascript" src="bower_components/backbone.customsync/backbone.customsync.js"></script>
+      <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+  </head>
+  <body>
+    <form class="classes-add-form modal hide fade" action="javascript:;" class="login">
+        <div class="modal-header">
+            <h3 id="myModalLabel">כניסה</h3>
+            <input class="user" type="text" />
+        </div>
+        <div class="modal-body">
+            <h4>ססמה</h4>
+            <input class="pass" type="password" />
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary submit" data-dismiss="modal">Login</button>
+        </div>
+        <input type="text" class="user" /><input type="password" class="pass"/><input type="submit" value="login"/>
+    </form>
+    <div class="app row container">
+            <div class="row">
+                <nav class="span2 main">
+                </nav>
+                <section class="span10 main">
+                    <!--Body content-->
+                </section>
+            </div>
+    </div>
+
+        <form class="classes-add-form modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">הוסף מקצה</h3>
+            </div>
+            <div class="modal-body">
+                <h4>שם</h4>
+                <input type="text" name="name" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn cancel" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal">Save changes</button>
+            </div>
+        </form>
+
+    <script type="text/javascript">
+        var dictionary = {
+            singular :{
+                classes : 'מקצה',
+                routes : 'מסלול',
+                users : 'מתחרה',
+                stage : 'שלב'
+            },
+            plural : {
+                classes : 'מקצים',
+                routes : 'מסלולים',
+                users : 'מתחרים',
+                stage : 'שלבים'
+            }
+        } ;
+    </script>
+    <script type="text/javascript" src="js/Data.js"></script>
+    <script type="text/javascript" src="js/Names.js"></script>
+    <script type="text/javascript" src="js/Class.js"></script>
+    <script type="text/javascript" src="js/Page.js"></script>
+    <script type="text/javascript" src="js/Nav.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+  </body>
+</html>
