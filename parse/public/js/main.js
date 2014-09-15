@@ -17,6 +17,8 @@ init();
 function init(){
     $('form.login').remove();
 
+	$('form.add-user-form').modal('show');
+
     Data.fetchAll(function(){
         var cat = Data.collections.Category.models[0];
 
@@ -27,4 +29,17 @@ function init(){
 
 function showApp(){
     $('.app').css('display','block');
+
+
+	var select1 = new Views.SelectView({
+		$el: 'form.add-user-form select',
+		model: Data.collections.Category.models
+	});
+	select1.on('change')
+
+	$('form.add-user-form .btn-primary').on('click', function(){
+
+	})
 }
+
+init();
