@@ -1,5 +1,5 @@
 var Data = {};
-Data.types = ['classes','stage','users'];
+Data.types = ['Category','Climber','Stage'];
 Data.models = {};
 Data.collections = {};
 

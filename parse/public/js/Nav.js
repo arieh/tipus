@@ -1,6 +1,6 @@
 var nav = $('nav.main');
 
-['classes','users','stage'].forEach(function(type) {
+Data.types.forEach(function(type) {
     var btn = $('<button></button>', {
         className : 'btn btn-primary '+type,
         'data-type' : type,
