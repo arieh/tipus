@@ -4,7 +4,7 @@ Stage.Perliminary = Backbone.View.extend({
 
     templates : {
         main : _.template("<thead><tr><th><%= id_num %></th><th><%= name %></th><%= routes %><th><%= score %></th></tr></thead><tbody></tbody>"),
-        route_header : _.template("<th class='route'>" + dictionary.climber.route + " <%= num %></th>"),
+        route_header : _.template("<th class='route'>" + dictionary.Climber.route + " <%= num %></th>"),
         climber : _.template("<td><%= id_num %></td><td><%= name %></td><%= routes %><td class='score'><%=score%></td>"),
         climber_route : _.template('<td class="route"><input data-index="<%=num%>" data-climber="<%=climber%>" value="<%=value%>" /></td>')
     },
@@ -20,7 +20,7 @@ Stage.Perliminary = Backbone.View.extend({
         this.routes = [];
         this.climbers = {};
         this.scores = {};
-        
+
         for (i=0; i<this.route_num; i++) {
             this.routes[i] = {climbers:{}, ranked :[]};
         }
@@ -42,14 +42,16 @@ Stage.Perliminary = Backbone.View.extend({
             html+= this.templates.route_header({num:i+1});
         }
 
-        var data = _.clone(dictionary.climber);
+        var data = _.clone(dictionary.Climber);
         data.routes = html;
 
         this.$el.html(this.templates.main(data));
     },
 
     populate : function(models){
-        this.models = models;
+        this.models = models.sort(function(current, next) {
+            return current.attributes.score !=0 && current.attributes.score > next.attributes.score;
+        });
         models.forEach(this.createItem.bind(this));
 
         this.routes.forEach(function(route, index){

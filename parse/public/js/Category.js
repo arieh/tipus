@@ -1,67 +1,6 @@
-var CategoryList = Backbone.View.extend({
-    templates : {
-        main : _.template("<header></header><ul></ul>")
-    },
-    initialize : function(){
-        this.cats = Data.collections.Category;
-        this.cats.on('add', this.add.bind(this));
-        this.render();
-
-        this.cats.models.forEach(this.add.bind(this));
-    },
-    render : function() {
-        this.$el = $('<secion class="page Category"></secion>');
-        this.$el.html(this.templates.main);
-        this.elements = {
-            header : this.$('header'),
-            list : this.$('ul'),
-            button : $('<button></button>', {
-                html : dictionary.Category.add,
-                'class' : 'button'
-            }),
-            form : $('.category-add-form')
-        };
-
-        this.elements.header.append($('<h1></h1>', {html:Names.getPlural('Category')}));
-        this.elements.header.append(this.elements.button);
-
-        this.elements.button.on('click', function(){
-            this.elements.form.modal('show');
-        }.bind(this));
-
-        $('.btn-primary', this.elements.form).on('click', this.create.bind(this));
-    },
-
-    create : function(){
-        var data = {
-            finals_climbers : 5,
-            semi_finals_climbers : 10
-        };
-        this.elements.form.serializeArray().forEach(function(props){
-            if (!props.value) return;
-            if (typeof data[props.name] == 'number') {
-                data[props.name] = +props.value;
-                return;
-            }
-            data[props.name] = props.value;
-        });
-
-        Data.create('Category',data);
-    },
-    add : function(model) {
-        if (!model.get('name')) return;
-
-        var li = $('<li></li>'),
-            cat = new Category({model : model});
-
-        li.append(cat.$el);
-        this.elements.list.append(li);
-    }
-});
-
 var Category = Backbone.View.extend({
     model : Data.models.Category,
-    template : _.template("<header><h3><%=name%></h3></header><nav></nav>"),
+    template : _.template("<li><header><h3><%=name%></h3></header><nav></nav></li>"),
     initialize : function(){
         this.render();
     },
@@ -146,4 +85,13 @@ var Category = Backbone.View.extend({
 
         Page.show(this.stage);
     }
+});
+
+var CategoryList = Views.List.extend({
+    default_data : {
+        finals_climbers : 5,
+        semi_finals_climbers : 10
+    },
+    type : 'Category',
+    subView : Category
 });

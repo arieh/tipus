@@ -12,8 +12,6 @@ $('form.login .submit').on('click', function(){
     });
 });
 
-init();
-
 function init(){
     $('form.login').remove();
 
@@ -25,23 +23,8 @@ function init(){
         var per = new Stage.Perliminary({category:cat, route_number:4});
         $(document.body).append(per.$el);*/
 
-        Page.show(new CategoryList());
     });
 }
 
-function showApp(){
-    $('.app').css('display','block');
-
-
-	var select1 = new Views.SelectView({
-		$el: 'form.add-user-form select',
-		model: Data.collections.Category.models
-	});
-	select1.on('change')
-
-	$('form.add-user-form .btn-primary').on('click', function(){
-
-	})
-}
 
 init();

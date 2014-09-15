@@ -30,6 +30,14 @@ tr .route input{
     text-align: right;
 }
 
+.table th {
+    text-align: right;
+}
+
 form input[type=text], form input[type=number] {
     height: 30px;
+}
+
+.page button {
+    display: inline-block;
 }

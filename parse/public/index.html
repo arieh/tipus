@@ -14,6 +14,15 @@
       <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
   </head>
   <body>
+    <nav class="main">
+        <button class="button" data-class="Climber">מתחרים</button>
+        <button class="button" data-class="Category">מקצים</button>
+    </nav>
+
+    <section class="main">
+          <!--Body content-->
+    </section>
+
     <form class="login modal hide fade" action="javascript:;">
         <div class="modal-header">
             <h3 id="myModalLabel">כניסה</h3>
@@ -28,19 +37,8 @@
             <button class="btn btn-primary submit" data-dismiss="modal">Login</button>
         </div>
     </form>
-    <div class="app row container">
-            <div class="row">
-                <nav class="span2 main">
-                    <ul>
-                    </ul>
-                </nav>
-                <section class="span10 main">
-                    <!--Body content-->
-                </section>
-            </div>
-    </div>
 
-        <form class="classes-add-form modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
+        <form class="login modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
             <div class="modal-header">
                 <h3 id="myModalLabel">כניסה</h3>
             </div>
@@ -55,24 +53,47 @@
             </div>
         </form>
 
-        <form class="category-add-form modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">הוסף מקצה</h3>
-            </div>
-            <div class="modal-body">
-                <h4>שם</h4>
-                <input type="text" name="name" />
-                <h4>מספר מתמודדים לחצי גמר</h4>
-                <input type="number" name="semi_finals_climbers"/>
-                <h4>מספר מתמודדים לגמר</h4>
-                <input type="number" name="finals_climbers" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn cancel" data-dismiss="modal" aria-hidden="true">Close</button>
-                <button class="btn btn-primary" data-dismiss="modal">Save changes</button>
-            </div>
-        </form>
+    <form class="category-add-form modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">הוסף מקצה</h3>
+        </div>
+        <div class="modal-body">
+            <h4>שם</h4>
+            <input type="text" name="name" />
+            <h4>מספר מתמודדים לחצי גמר</h4>
+            <input type="number" name="semi_finals_climbers"/>
+            <h4>מספר מתמודדים לגמר</h4>
+            <input type="number" name="finals_climbers" />
+        </div>
+        <div class="modal-footer">
+            <button class="btn cancel" data-dismiss="modal" aria-hidden="true">Close</button>
+            <button class="btn btn-primary" data-dismiss="modal">Save changes</button>
+        </div>
+    </form>
+
+    <form class="climber-add-form modal hide fade" tabindex="-1" role="dialog" action="javascript:;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">הוסף משתמש</h3>
+        </div>
+        <div class="modal-body">
+            <h4>שם</h4>
+            <input type="text" name="name" />
+            <h4>ת.ז.</h4>
+            <input type="number" name="id_num"/>
+            <h4>email</h4>
+            <input type="email" name="email"/>
+            <h4>גיל</h4>
+            <input type="number" name="age" />
+            <h4>מקצה</h4>
+            <div class="cat"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn cancel" data-dismiss="modal" aria-hidden="true">Close</button>
+            <button class="btn btn-primary" data-dismiss="modal">Save changes</button>
+        </div>
+    </form>
     <script type="text/javascript">
         var dictionary = {
             singular :{
@@ -85,24 +106,47 @@
                 Climber : 'מתחרים',
                 Stage : 'שלבים'
             },
-            climber : {
+            Climber : {
                 name : 'שם',
                 id_num : 'ת.ז.',
                 cat : 'קטגוריה',
                 route : 'מסלול מס׳',
-                score : 'ניקוד'
-                Climber : 'מתחרים',
-                Stage : 'שלבים'
+                email : 'דוא״ל',
+                score : 'ניקוד',
+                climbers : 'מתחרים',
+                add : 'הוסף מתחרה',
+                age : 'גיל'
+            },
+            Category : {
+                add : 'הוסף מקצה',
+                start : 'התחל מוקדמות',
+                perliminary : 'מוקדמות',
+                semi : '',
+                semi1 : '',
+                semi2 : '',
+                final : '',
+                final1: '',
+                final2 : ''
             }
         } ;
+    </script>
+
+    <script type="text/template" id="select-template">
+        <select>
+        <% for (var i=0, model; model = models[i];i++) { %>
+            <% if (! model.get('name') ) continue %>
+            <option value="<%= model.id %>"><%=model.get('name') %></option>
+        <% } %>
+        </select>
     </script>
     <script type="text/javascript" src="js/Data.js"></script>
     <script type="text/javascript" src="js/Names.js"></script>
     <script type="text/javascript" src="js/Page.js"></script>
-    <script type="text/javascript" src="js/Nav.js"></script>
     <script type="text/javascript" src="js/Stage.js"></script>
     <script type="text/javascript" src="js/Views.js"></script>
     <script type="text/javascript" src="js/Category.js"></script>
+    <script type="text/javascript" src="js/Climber.js"></script>
+    <script type="text/javascript" src="js/Nav.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
 

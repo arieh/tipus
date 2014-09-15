@@ -16,13 +16,18 @@ Data.types.forEach(function(type){
 
 Data.fetchAll = function(cb){
     var i = 0,
-        type;
+        type,
+        called = false;
 
     function fetch() {
         type = Data.types[i];
         i++;
+
+        if (called) return;
+
         if (!type){
             cb();
+            called =true;
             return;
         }
 
