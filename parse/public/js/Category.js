@@ -15,14 +15,7 @@ var Category = Backbone.View.extend({
             })
         };
 
-        if (this.model.get('started')) {
-            this.generateStages();
-            return;
-        }
-
-        this.elements.button.on('click', this.start.bind(this));
-
-        $('nav', this.$el).append(this.elements.button);
+        this.generateStages();
     },
     start : function(){
         this.model.set('started', true).save();
@@ -58,7 +51,7 @@ var Category = Backbone.View.extend({
     },
 
     generateSemiButtons : function(){
-        if (this.model.get('semi_finals_count') == 2) {
+        if (this.model.get('semi_final_count') == 2) {
             this.generate('semi1');
             this.generate('semi2');
         }else {
@@ -67,7 +60,7 @@ var Category = Backbone.View.extend({
     },
 
     generateFinalButtons : function(){
-        if (this.model.get('finals_count') == 2) {
+        if (this.model.get('semi_final_count') == 2) {
             this.generate('final1');
             this.generate('final2');
         }else {
@@ -91,20 +84,46 @@ var Category = Backbone.View.extend({
 
         Page.show(this.stage);
     },
-    openSemi : function(){
+    openSemi : function(semi1){
         var start = 0,
             end = this.model.get('semi_finals_climbers'),
-            title = dictionary.Category.semi + ' : ' + this.model.get('name');
+            title = dictionary.Category[semi1 ? 'semi1' : 'semi'] + ' : ' + this.model.get('name');
 
         Page.show(new Stage.SemiFinals({start:start, end:end, title:title, category:this.model}));
     },
-    openFinal : function(){
+
+    openSemi1 : function(){
+        return this.openSemi(true);
+    },
+
+    openSemi2 : function(){
+        var start = this.model.get('semi_finals_climbers') + 1,
+            end = start *2,
+            title = dictionary.Category.semi2 + ' : ' + this.model.get('name');
+
+        Page.show(new Stage.SemiFinals({start:start, end:end, title:title, category:this.model}));
+    },
+
+    openFinal : function(final1){
         var start = 0,
             end = this.model.get('finals_climbers'),
-            title = dictionary.Category.final + ' : ' + this.model.get('name');
+            title = dictionary.Category[final1 ? 'final1' : 'final'] + ' : ' + this.model.get('name');
 
         Page.show(new Stage.Finals({start:start, end:end, title:title, category:this.model}));
-    }
+    },
+
+    openFinal1 : function(){
+        return this.openFinal(true);
+    },
+
+    openFinal2 : function(){
+        var start = this.model.get('finals_climbers') + 1,
+            end = start *2,
+            title = dictionary.Category.final2 + ' : ' + this.model.get('name');
+
+        Page.show(new Stage.SemiFinals({start:start, end:end, title:title, category:this.model}));
+    },
+
 });
 
 var CategoryList = Views.List.extend({

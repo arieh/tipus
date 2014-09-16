@@ -1,7 +1,7 @@
 
 Parse.initialize("SQa6ZzYOcMMIO9uDvvkcxUksxcoBztIbvBgiHZVt", "WVrICdMNw7S96fY1FSxYwxUQq24ucMcw5YpyWm1i");
 
-$('form.login').modal('show');
+//$('form.login').modal('show');
 
 $('form.login .submit').on('click', function(){
     var name = $('.login .user').val(),
@@ -22,3 +22,4 @@ function init(){
     });
 }
 
+init();

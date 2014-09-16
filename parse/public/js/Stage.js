@@ -60,7 +60,7 @@ Stage.Perliminary = Backbone.View.extend({
     },
 
     populate : function(models){
-        this.models = Stage.PerliminarySort(models);
+        this.models = _.clone(models);
 
         this.models.forEach(this.createItem.bind(this));
 
@@ -71,6 +71,8 @@ Stage.Perliminary = Backbone.View.extend({
         for (var id in this.climbers) {
             this.updateClimberScore(id);
         }
+
+        this.sortByName();
     },
 
     createItem : function(model,index) {
@@ -239,12 +241,29 @@ Stage.PerliminarySort = function(models, min, max) {
         return current - next;
     });
 
+    function getScore(index) {
+        if (!models[index]) return -1;
+        return models[index].attributes.perliminary_score;
+    }
+
+    if (!min) min=0;
+    if (!max) max = models.length -1;
+
+    while (getScore(min) === getScore(min-1)) {
+        min++;
+        max++;
+    }
+
+    while (getScore(max) === getScore(max+1)) {
+        max++;
+    }
+
     return models.slice(min, max);
 };
 
 Stage.SemiFinals = Backbone.View.extend({
     templates : {
-        main : _.template("<section><h1><%=title%></h1><button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><th><%=score%></th><th><%=time%></th></tr></thead><tbody></tbody></table></section>"),
+        main : _.template("<section><h1><%=title%></h1><button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button><button class=\"sort-order\"><%=sort_order%></button><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><th><%=score%></th><th><%=time%></th></tr></thead><tbody></tbody></table></section>"),
         climber : _.template('<tr data-id="<%=climber%>"><td><%= id_num %></td><td><%= name %></td><td><input type="number"  name="score" data-climber="<%=climber%>" value="<%=score%>" /></td><td><input type="number" name="time" data-climber="<%=climber%>" value="<%=time%>" /></td></tr>')
     },
 
@@ -264,6 +283,7 @@ Stage.SemiFinals = Backbone.View.extend({
         'keyup [name=score]' : 'scoreChange',
         'keyup [name=time]' : 'timeChange',
         'click .sort-name' : 'sortByName',
+        'click .sort-order' : 'sortByOrder',
         'click .sort-rank' : 'sortByRank'
     },
 
@@ -287,9 +307,11 @@ Stage.SemiFinals = Backbone.View.extend({
     populate : function(models) {
         var models = Stage.PerliminarySort(models, this.options.start, this.options.end);
 
-        models = Stage.NormalSort(models, this.score_attr, this.time_attr);
+        models = _.clone(models);
 
         models.forEach(this.createItem.bind(this));
+
+        this.sortByName();
     },
 
     getData : function(model) {
@@ -358,6 +380,16 @@ Stage.SemiFinals = Backbone.View.extend({
         this.sort(function(c, n){
             return Stage.normalSortFn(c,n, this.score_attr, this.time_attr);
         }.bind(this));
+    },
+
+    sortByOrder : function(){
+        this.sortByName();
+        this.sort(function(c, n) {
+            var current = c.attributes.perliminary_score,
+                next = n.attributes.perliminary_score;
+
+            return next - current;
+        }.bind(this));
     }
 });
 
@@ -368,9 +400,17 @@ Stage.Finals = Stage.SemiFinals.extend({
     time_attr : 'final_time',
 
     populate : function(models) {
-        var models = Stage.NormalSort(models, this.score_attr, this.time_attr);
+        var models = Stage.NormalSort(models, 'semi_score', 'semi_time');
         models = models.slice(this.options.start, this.options.end);
         models.forEach(this.createItem.bind(this));
+        this.sortByName();
+    },
+
+    sortByOrder : function(){
+        this.sortByName();
+        this.sort(function(c, n) {
+            return Stage.normalSortFn(c,n, 'semi_score', 'semi_time') * -1;
+        }.bind(this));
     }
 });
 

@@ -90,7 +90,7 @@ var Views = {
             var data = _.clone(this.default_data);
             this.elements.form.serializeArray().forEach(function(props){
                 if (!props.value) return;
-                if (typeof data[props.name] == 'number') {
+                if (props.value == +props.value) {
                     data[props.name] = +props.value;
                     return;
                 }
@@ -109,7 +109,12 @@ var Views = {
 
         sort : function() {
             this.models.sort(function(current, next){
-                return current.attributes.name < next.attributes.name;
+                var c = current.attributes.name,
+                    n = next.attributes.name;
+
+                if (c > n) return 1;
+                if (c < n) return -1;
+                return 0;
             });
         }
     })

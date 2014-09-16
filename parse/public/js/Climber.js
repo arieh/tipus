@@ -4,7 +4,7 @@ var Climber = Backbone.View.extend({
             <td><input name="name" value="<%=name%>"/></td>\
             <td><input name="id_num" value="<%=id_num%>"/></td>\
             <td><input name="email" value="<%=email%>"/></td>\
-            <td><input name="age" value="<%=age%>"/></td>\
+            <td><input name="age" value="<%=age%>" title="<%=real_age %>" /></td>\
             <td class="cat"></td>\
             </tr>')
     },
@@ -28,12 +28,16 @@ var Climber = Backbone.View.extend({
             if (!( key in data)) data[key]='';
         });
 
+        data.real_age = (new Date).getFullYear() - data.age;
+
         this.$el = $(this.templates.main(data));
     },
     valueChange : function(e){
         var input = $(e.target),
             value = input.val(),
             prop = input.attr('name');
+
+        if (+value == value) value = +value;
 
         this.model.set(prop, value).save();
     },
@@ -57,7 +61,8 @@ var ClimberList = Views.List.extend({
 
     default_data : {
         id_num : 0,
-        score : 0
+        email : '',
+        age : 0
     },
     type : 'Climber',
     subView : Climber,
