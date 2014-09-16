@@ -90,7 +90,7 @@ var Category = Backbone.View.extend({
             return;
         }
 
-        this.stage = new Stage.Perliminary({category:this.model});
+        this.stage = new Stage.Perliminary({category:this.model, title : this.model.get('name')});
 
         Page.show(this.stage);
     }

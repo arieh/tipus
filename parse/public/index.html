@@ -128,7 +128,14 @@
                 final1: '',
                 final2 : ''
             }
-        } ;
+        };
+
+        dictionary.Perliminary = _.clone(dictionary.Climber);
+        _.extend(dictionary.Perliminary, {
+            sort_name : 'מיין לפי שם',
+            sort_rank : 'מיין לפי ניקוד',
+            title : 'מוקדמות'
+        });
     </script>
 
     <script type="text/template" id="select-template">

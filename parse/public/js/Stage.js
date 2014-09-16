@@ -11,14 +11,16 @@ Stage.Query = function(category, cb){
 Stage.Perliminary = Backbone.View.extend({
 
     templates : {
-        main : _.template("<table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><%= routes %><th><%= score %></th></tr></thead><tbody></tbody></table>"),
+        main : _.template("<section><h1><%=title%></h1><button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><%= routes %><th><%= score %></th></tr></thead><tbody></tbody></table></section>"),
         route_header : _.template("<th class='route'>" + dictionary.Climber.route + " <%= num %></th>"),
         climber : _.template("<td><%= id_num %></td><td><%= name %></td><%= routes %><td class='score'><%=perliminary_score%></td>"),
         climber_route : _.template('<td class="route"><input data-index="<%=num%>" data-climber="<%=climber%>" value="<%=value%>" /></td>')
     },
 
     events : {
-        'keyup .route input' : 'routeChange'
+        'keyup .route input' : 'routeChange',
+        'click .sort-name' : 'sortByName',
+        'click .sort-rank' : 'sortByRank'
     },
 
     initialize : function(args){
@@ -28,6 +30,7 @@ Stage.Perliminary = Backbone.View.extend({
         this.routes = [];
         this.climbers = {};
         this.scores = {};
+        this.title = args.title;
 
         for (i=0; i<this.route_num; i++) {
             this.routes[i] = {climbers:{}, ranked :[]};
@@ -48,8 +51,9 @@ Stage.Perliminary = Backbone.View.extend({
             html+= this.templates.route_header({num:i+1});
         }
 
-        var data = _.clone(dictionary.Climber);
+        var data = _.clone(dictionary.Perliminary);
         data.routes = html;
+        data.title = data.title + ' : ' + this.title;
 
         this.$el = $(this.templates.main(data));
         this.el = this.$el[0];
@@ -186,6 +190,44 @@ Stage.Perliminary = Backbone.View.extend({
         climber.set('perliminary_score',score);
         climber.save();
         score_el.html(score);
+    },
+    sort : function(fn){
+        var el = this.$('tbody'),
+            rows = [].slice.call(el[0].children);
+
+        el.html('');
+        rows = rows.sort(function(c, n) {
+            var c_id = c.getAttribute('data-id'),
+                n_id = n.getAttribute('data-id'),
+                current = this.climbers[c_id],
+                next = this.climbers[n_id];
+
+            return fn(current, next);
+        }.bind(this));
+
+        el.append(rows);
+    },
+
+    sortByName : function() {
+        this.sort(function(current, next){
+            var c_name = current.attributes.name,
+                n_name = next.attributes.name;
+
+            if (c_name > n_name) return 1;
+            if (c_name < n_name) return -1;
+            return 0;
+        });
+    },
+
+    sortByRank : function(){
+        this.sort(function(current, next){
+            var c_score = current.attributes.perliminary_score,
+                n_score = next.attributes.perliminary_score;
+
+            if (c_score > n_score) return 1;
+            if (c_score < n_score) return -1;
+            return 0;
+        });
     }
 });
 
