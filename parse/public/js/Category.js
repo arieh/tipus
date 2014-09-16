@@ -53,11 +53,20 @@ var Category = Backbone.View.extend({
         nav.append(perliminary);
 
         function generate(name) {
-            nav.append($("<button></button>",{
+            var button = $("<button></button>",{
                 html : dictionary.Category[name],
                 'class' : name
-            }));
+            });
+
+            name[0] = name[0].toUpperCase();
+            var fn = this['open'+name] || function(){
+                console.log(name);
+            };
+            button.on('click', fn.bind(this));
+            nav.append(button);
         }
+
+        perliminary.on('click', this.openPerliminary.bind(this));
 
         if (!semi_count) return;
         if (semi_count == 1) {

@@ -19,10 +19,14 @@ var Views = {
 			if (parent) parent.append(this.$el);
 		},
 		setCurrent : function(value){
+			if (typeof value !='string' && 'id' in value) {
+			    value = value.id;
+			}
+
 			this.current && this.current.attr('current', '');
 
 			this.current = this.$('[value='+value+']');
-			this.current.attr('current','current');
+			this.current.attr('selected','selected');
 			this.model = this.collection.filter(function(d){return d.id == value;})[0];
         },
 		optionsChange : function(e) {

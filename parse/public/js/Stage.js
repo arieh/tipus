@@ -1,11 +1,19 @@
 var Stage = {};
 
+Stage.Query = function(category, cb){
+
+    var query = new Parse.Query('Climber');
+
+    query.equalTo('category', category);
+    query.find().then(cb);
+};
+
 Stage.Perliminary = Backbone.View.extend({
 
     templates : {
-        main : _.template("<thead><tr><th><%= id_num %></th><th><%= name %></th><%= routes %><th><%= score %></th></tr></thead><tbody></tbody>"),
+        main : _.template("<table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><%= routes %><th><%= score %></th></tr></thead><tbody></tbody></table>"),
         route_header : _.template("<th class='route'>" + dictionary.Climber.route + " <%= num %></th>"),
-        climber : _.template("<td><%= id_num %></td><td><%= name %></td><%= routes %><td class='score'><%=score%></td>"),
+        climber : _.template("<td><%= id_num %></td><td><%= name %></td><%= routes %><td class='score'><%=perliminary_score%></td>"),
         climber_route : _.template('<td class="route"><input data-index="<%=num%>" data-climber="<%=climber%>" value="<%=value%>" /></td>')
     },
 
@@ -27,13 +35,11 @@ Stage.Perliminary = Backbone.View.extend({
 
         this.render();
 
-        this.query = new Parse.Query('Climber');
-        this.query.equalTo('category', this.category);
-        this.query.find().then(this.populate.bind(this));
+        Stage.Query(this.category, this.populate.bind(this));
     },
 
     render : function(){
-        this.$el = $('<table class="table"></table>');
+        var i;
 
         var tr = $('<tr>');
         var html = '';
@@ -45,14 +51,14 @@ Stage.Perliminary = Backbone.View.extend({
         var data = _.clone(dictionary.Climber);
         data.routes = html;
 
-        this.$el.html(this.templates.main(data));
+        this.$el = $(this.templates.main(data));
+        this.el = this.$el[0];
     },
 
     populate : function(models){
-        this.models = models.sort(function(current, next) {
-            return current.attributes.score !=0 && current.attributes.score > next.attributes.score;
-        });
-        models.forEach(this.createItem.bind(this));
+        this.models = Stage.PerliminarySort(models);
+
+        this.models.forEach(this.createItem.bind(this));
 
         this.routes.forEach(function(route, index){
             this.rankRoute(index);
@@ -75,12 +81,16 @@ Stage.Perliminary = Backbone.View.extend({
         for (var i=0; i< this.route_num; i++) {
             routes_html+=this.templates.climber_route({num:i,climber:model.id, value:routes[i] || ''});
 
-            this.routes[i].climbers[model.id] = {score:routes[i], rank:i};
+            this.routes[i].climbers[model.id] = {score:routes[i] || '', rank:0};
             this.routes[i].ranked.push(model.id);
         }
 
         var data = _.clone(model.attributes);
         data.routes = routes_html;
+
+        if (!data.perliminary_score) {
+            data.perliminary_score = data.score || 0;
+        }
 
         el.html(this.templates.climber(data));
 
@@ -113,7 +123,7 @@ Stage.Perliminary = Backbone.View.extend({
     rankRoute : function(route_num) {
         var route = this.routes[route_num],
             climbers = route.climbers,
-            i, id, first =0;
+            i, id, first = 0, next;
 
         function add(num) {
             return num * ((num+1)/2);
@@ -131,8 +141,13 @@ Stage.Perliminary = Backbone.View.extend({
             }
         }
 
-        route.ranked.sort(function(c_id, n_id){
-            return climbers[c_id].score < climbers[n_id].score;
+        route.ranked = route.ranked.sort(function(c_id, n_id){
+            var current = climbers[c_id].score || 0,
+                next = climbers[n_id].score || 0;
+
+            if (current > next) return -1;
+            if (next > current) return 1;
+            return 0;
         });
 
         for (i=0; id = route.ranked[i]; i++) {
@@ -168,8 +183,101 @@ Stage.Perliminary = Backbone.View.extend({
 
         score = genMin(this.scores[id]);
         score = +(parseFloat(score).toFixed(3));
-        climber.set('score',score);
+        climber.set('perliminary_score',score);
         climber.save();
         score_el.html(score);
+    }
+});
+
+Stage.PerliminarySort = function(models, min, max) {
+    var models = _.clone(models).sort(function(current, next) {
+        var current = current.attributes.perliminary_score || 0,
+            next = next.attributes.perliminary_score || 0;
+
+        return current - next;
+    });
+
+    return models.slice(min, max);
+};
+
+
+
+Stage.SemiFinals = Backbone.View.extend({
+    templates : {
+        main : _.template("<h1><%=title%></h1><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><th><%=score%></th><th><%=time%></th></tr></thead><tbody></tbody></table>"),
+        climber : _.template('<td><%= id_num %></td><td><%= name %></td><td><input type="number"  name="score" data-climber="<%=climber%>" value="<%=score%>" /></td><td><input type="number" name="time" data-climber="<%=climber%>" value="<%=time%>" /></td><td class="score"><%=perliminary_score%></td>'),
+    },
+
+    dict_key : 'SemiFinals',
+
+    score_attr : 'semi_score',
+    time_attr : 'semi_time',
+
+    defaults : {
+        start : 0,
+        end : 10,
+        category : null
+    },
+
+    events : {
+        'keyup [name=score]' : 'scoreChange',
+        'keyup [name=time]' : 'timeChange'
+    },
+
+    initialize : function(){
+        this.options = _.extend({}, this.defaults, this.options);
+
+        this.models = {};
+
+        this.render();
+        Stage.Query(this.options.category, this.populate.bind(this));
+    },
+    render : function(){
+        var data = _.clone(dictionary[this.dict_key]);
+
+        data.title = data.title + ' : ' + this.options.name;
+
+        this.$el = $(this.templates.main(dictionary.SemiFinals));
+        this.el = this.$el[0];
+    },
+    populate : function(models) {
+        var models = Stage.PerliminarySort(models, this.options.start, this.options.end);
+
+        models.forEach(this.createItem.bind(this));
+    },
+
+    getData : function(model) {
+        var data = _.clone(model.attributes);
+
+        data.score = data[this.score_attr] || 0;
+        data.time  = data[this.time_attr] || 0;
+        data.climber = model.id;
+
+        return data;
+    },
+
+    createItem : function(model) {
+        var data = this.getData(model);
+
+        this.models[model.id] = model;
+        this.$el.append($(this.templates.climber(data)));
+    },
+
+    scoreChange : function(e) {
+        var el = $(e.target),
+            value = el.val(),
+            id = el.attr('data-climber'),
+            model = this.models[id];
+
+        model.set(this.score_attr, value).save();
+    },
+
+    timeChange : function(e) {
+        var el = $(e.target),
+            value = el.val(),
+            id = el.attr('data-climber'),
+            model = this.models[id];
+
+        model.set(this.time_attr, value).save();
     }
 });

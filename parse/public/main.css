@@ -41,3 +41,7 @@ form input[type=text], form input[type=number] {
 .page button {
     display: inline-block;
 }
+
+section, nav {
+    display: block;
+}

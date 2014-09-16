@@ -15,7 +15,8 @@ var Climber = Backbone.View.extend({
         this.render();
         this.select = new Views.SelectView({
             collection : Data.collections.Category,
-            el : this.$('.cat')
+            el : this.$('.cat'),
+            value : this.model.get('category')
         });
 
         this.select.on('change', this.selectChange.bind(this));
@@ -78,5 +79,7 @@ var ClimberList = Views.List.extend({
     getData : function(){
         var data = ClimberList.__super__.getData.apply(this);
         data.category = this.select.val();
+
+        return data;
     }
 });
