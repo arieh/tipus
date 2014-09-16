@@ -41,48 +41,45 @@ var Category = Backbone.View.extend({
         'click .final2' : 'openFinal2'
     },
 
+    generate : function generate(name) {
+        var button = $("<button></button>",{
+            html : dictionary.Category[name],
+            'class' : name
+        });
+
+        var nav = this.$('nav');
+
+        name = name[0].toUpperCase() + name.substr(1);
+        var fn = this['open'+name] || function(){
+            console.log(name);
+        };
+        button.on('click', fn.bind(this));
+        nav.append(button);
+    },
+
+    generateSemiButtons : function(){
+        if (this.model.get('semi_finals_count') == 2) {
+            this.generate('semi1');
+            this.generate('semi2');
+        }else {
+            this.generate('semi');
+        }
+    },
+
+    generateFinalButtons : function(){
+        if (this.model.get('finals_count') == 2) {
+            this.generate('final1');
+            this.generate('final2');
+        }else {
+            this.generate('final');
+        }
+    },
+
     generateStages : function(){
-        var perliminary = $('<button></button>',{
-                html : dictionary.Category.perliminary,
-                'class' : 'perliminary'
-            }),
-            nav = this.$('nav'),
-            semi_count = this.model.get('semi_finals_count'),
-            finals_count = this.model.get('finals_count');
+        this.generate('perliminary');
+        this.generateSemiButtons();
+        this.generateFinalButtons();
 
-        nav.append(perliminary);
-
-        function generate(name) {
-            var button = $("<button></button>",{
-                html : dictionary.Category[name],
-                'class' : name
-            });
-
-            name[0] = name[0].toUpperCase();
-            var fn = this['open'+name] || function(){
-                console.log(name);
-            };
-            button.on('click', fn.bind(this));
-            nav.append(button);
-        }
-
-        perliminary.on('click', this.openPerliminary.bind(this));
-
-        if (!semi_count) return;
-        if (semi_count == 1) {
-            generate('semi');
-        }else {
-            generate('semi1');
-            generate('semi2');
-        }
-
-        if (!finals_count) return;
-        if (finals_count == 1) {
-            generate('final');
-        }else {
-            generate('final1');
-            generate('final2');
-        }
     },
     openPerliminary : function(){
         if (this.stage) {
@@ -93,6 +90,20 @@ var Category = Backbone.View.extend({
         this.stage = new Stage.Perliminary({category:this.model, title : this.model.get('name')});
 
         Page.show(this.stage);
+    },
+    openSemi : function(){
+        var start = 0,
+            end = this.model.get('semi_finals_climbers'),
+            title = dictionary.Category.semi + ' : ' + this.model.get('name');
+
+        Page.show(new Stage.SemiFinals({start:start, end:end, title:title, category:this.model}));
+    },
+    openFinal : function(){
+        var start = 0,
+            end = this.model.get('finals_climbers'),
+            title = dictionary.Category.final + ' : ' + this.model.get('name');
+
+        Page.show(new Stage.Finals({start:start, end:end, title:title, category:this.model}));
     }
 });
 

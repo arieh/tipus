@@ -37,11 +37,21 @@ tr .route input{
 form input[type=text], form input[type=number] {
     height: 30px;
 }
+input[type=text], input[type=number] {
+    height: 30px;
+}
 
+input[type=number] {
+    width:58px;
+}
 .page button {
     display: inline-block;
 }
 
 section, nav {
     display: block;
+}
+
+nav.main {
+    display: none;
 }

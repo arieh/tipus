@@ -121,12 +121,13 @@
                 add : 'הוסף מקצה',
                 start : 'התחל מוקדמות',
                 perliminary : 'מוקדמות',
-                semi : '',
-                semi1 : '',
-                semi2 : '',
-                final : '',
-                final1: '',
-                final2 : ''
+                startSemi : 'התחל חצי גמר',
+                semi : 'חצי גמר',
+                semi1 : 'חצי גמר עילית',
+                semi2 : 'חצי גמר ספורט',
+                final : 'גמר',
+                final1: 'גמר עילית',
+                final2 : 'גמר ספורט'
             }
         };
 
@@ -136,6 +137,15 @@
             sort_rank : 'מיין לפי ניקוד',
             title : 'מוקדמות'
         });
+
+        dictionary.SemiFinals = _.clone(dictionary.Perliminary);
+        _.extend(dictionary.SemiFinals, {
+            score : 'ניקוד',
+            time : 'זמן'
+        });
+
+        dictionary.Finals = _.clone(dictionary.SemiFinals);
+        _.extend(dictionary.Finals, {});
     </script>
 
     <script type="text/template" id="select-template">

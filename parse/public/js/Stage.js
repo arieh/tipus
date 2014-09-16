@@ -242,12 +242,10 @@ Stage.PerliminarySort = function(models, min, max) {
     return models.slice(min, max);
 };
 
-
-
 Stage.SemiFinals = Backbone.View.extend({
     templates : {
-        main : _.template("<h1><%=title%></h1><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><th><%=score%></th><th><%=time%></th></tr></thead><tbody></tbody></table>"),
-        climber : _.template('<td><%= id_num %></td><td><%= name %></td><td><input type="number"  name="score" data-climber="<%=climber%>" value="<%=score%>" /></td><td><input type="number" name="time" data-climber="<%=climber%>" value="<%=time%>" /></td><td class="score"><%=perliminary_score%></td>'),
+        main : _.template("<section><h1><%=title%></h1><button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><th><%=score%></th><th><%=time%></th></tr></thead><tbody></tbody></table></section>"),
+        climber : _.template('<tr data-id="<%=climber%>"><td><%= id_num %></td><td><%= name %></td><td><input type="number"  name="score" data-climber="<%=climber%>" value="<%=score%>" /></td><td><input type="number" name="time" data-climber="<%=climber%>" value="<%=time%>" /></td></tr>')
     },
 
     dict_key : 'SemiFinals',
@@ -258,16 +256,19 @@ Stage.SemiFinals = Backbone.View.extend({
     defaults : {
         start : 0,
         end : 10,
+        title : '',
         category : null
     },
 
     events : {
         'keyup [name=score]' : 'scoreChange',
-        'keyup [name=time]' : 'timeChange'
+        'keyup [name=time]' : 'timeChange',
+        'click .sort-name' : 'sortByName',
+        'click .sort-rank' : 'sortByRank'
     },
 
-    initialize : function(){
-        this.options = _.extend({}, this.defaults, this.options);
+    initialize : function(args){
+        this.options = _.extend({}, this.defaults, args);
 
         this.models = {};
 
@@ -277,13 +278,16 @@ Stage.SemiFinals = Backbone.View.extend({
     render : function(){
         var data = _.clone(dictionary[this.dict_key]);
 
-        data.title = data.title + ' : ' + this.options.name;
+        data.title = this.options.title;
 
-        this.$el = $(this.templates.main(dictionary.SemiFinals));
+        this.$el = $(this.templates.main(data));
+
         this.el = this.$el[0];
     },
     populate : function(models) {
         var models = Stage.PerliminarySort(models, this.options.start, this.options.end);
+
+        models = Stage.NormalSort(models, this.score_attr, this.time_attr);
 
         models.forEach(this.createItem.bind(this));
     },
@@ -302,7 +306,7 @@ Stage.SemiFinals = Backbone.View.extend({
         var data = this.getData(model);
 
         this.models[model.id] = model;
-        this.$el.append($(this.templates.climber(data)));
+        this.$('tbody').append($(this.templates.climber(data)));
     },
 
     scoreChange : function(e) {
@@ -321,5 +325,81 @@ Stage.SemiFinals = Backbone.View.extend({
             model = this.models[id];
 
         model.set(this.time_attr, value).save();
+    },
+    sort : function(fn){
+        var el = this.$('tbody'),
+            rows = [].slice.call(el[0].children);
+
+        el.html('');
+        rows = rows.sort(function(c, n) {
+            var c_id = c.getAttribute('data-id'),
+                n_id = n.getAttribute('data-id'),
+                current = this.models[c_id],
+                next = this.models[n_id];
+
+            return fn(current, next);
+        }.bind(this));
+
+        el.append(rows);
+    },
+
+    sortByName : function() {
+        this.sort(function(current, next){
+            var c_name = current.attributes.name,
+                n_name = next.attributes.name;
+
+            if (c_name > n_name) return 1;
+            if (c_name < n_name) return -1;
+            return 0;
+        });
+    },
+
+    sortByRank : function(){
+        this.sort(function(c, n){
+            return Stage.normalSortFn(c,n, this.score_attr, this.time_attr);
+        }.bind(this));
     }
 });
+
+Stage.Finals = Stage.SemiFinals.extend({
+    dict_key : 'Finals',
+
+    score_attr : 'final_score',
+    time_attr : 'final_time',
+
+    populate : function(models) {
+        var models = Stage.NormalSort(models, this.score_attr, this.time_attr);
+        models = models.slice(this.options.start, this.options.end);
+        models.forEach(this.createItem.bind(this));
+    }
+});
+
+Stage.normalSortFn = function(c, n, score_attr, time_attr){
+    var current = {
+            score : c.attributes[score_attr] || 0,
+            time : c.attributes[time_attr] || 9999,
+            perliminary : c.attributes.perliminary_score
+        },
+        next = {
+            score : n.attributes[score_attr] || 0,
+            time : n.attributes[time_attr] || 9999,
+            perliminary : n.attributes.perliminary_score
+        };
+
+    if (current.score < next.score) return 1;
+    if (current.score > next.score) return -1;
+
+    if (current.perliminary < next.perliminary) return 1;
+    if (current.perliminary > next.perliminary) return -1;
+
+    if (current.time > next.time) return 1;
+    return -1;
+};
+
+Stage.NormalSort = function(models, score_attr, time_attr) {
+    var models = _.clone(models).sort(function(c,n){
+        return Stage.normalSortFn(c,n, score_attr, time_attr);
+    });
+
+    return models;
+};
