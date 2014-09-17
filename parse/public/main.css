@@ -34,11 +34,12 @@ tr .route input{
     text-align: right;
 }
 
-form input[type=text], form input[type=number] {
+form input[type=text], form input[type=number], form input[type=email], form input {
     height: 30px;
 }
-input[type=text], input[type=number] {
+input[type=text], input[type=number], input[type=email], input {
     height: 30px;
+    width: 130px;
 }
 
 input[type=number] {
@@ -70,6 +71,10 @@ tbody {
     counter-reset: td-counter;
 }
 
+td {
+    padding:3px;
+}
+
 td:first-child:before {
     counter-increment: td-counter;
     content: counter(td-counter) ".";
@@ -81,4 +86,14 @@ td:first-child:before {
 
 td:first-child {
     border-right: 1px solid #aaa;
+}
+
+form .cell {
+    display: inline-block;
+    padding: 5px 10px;
+    min-width:130px;
+}
+
+select {
+    margin:0;
 }

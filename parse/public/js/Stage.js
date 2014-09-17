@@ -11,9 +11,13 @@ Stage.Query = function(category, cb){
 Stage.Perliminary = Backbone.View.extend({
 
     templates : {
-        main : _.template("<section><h1><%=title%></h1><button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><%= routes %><th><%= score %></th></tr></thead><tbody></tbody></table></section>"),
+        main : _.template("<section><h1><%=title%></h1>\
+            <button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button>\
+            <table class=\"table\"><thead><tr>\
+                <th><%= name %></th><th><%= id_num %></th><th><%=age%></th><th><%=home%></th><%= routes %><th><%= score %></th>\
+            </tr></thead><tbody></tbody></table></section>"),
         route_header : _.template("<th class='route'>" + dictionary.Climber.route + " <%= num %></th>"),
-        climber : _.template("<td><%= id_num %></td><td><%= name %></td><%= routes %><td class='score'><%=perliminary_score%></td>"),
+        climber : _.template("<td><%= name %></td><td><%= id_num %></td><td><%=calc_age%></td><td><%=home%></td><%= routes %><td class='score'><%=perliminary_score%></td>"),
         climber_route : _.template('<td class="route"><input data-index="<%=num%>" data-climber="<%=climber%>" value="<%=value%>" /></td>')
     },
 
@@ -97,6 +101,12 @@ Stage.Perliminary = Backbone.View.extend({
         if (!data.perliminary_score) {
             data.perliminary_score = data.score || 0;
         }
+
+        if (!data.home) {
+            data.home = '';
+        }
+
+        data.calc_age = (new Date).getFullYear() - data.age;
 
         el.html(this.templates.climber(data));
 
@@ -263,8 +273,8 @@ Stage.PerliminarySort = function(models, min, max) {
 
 Stage.SemiFinals = Backbone.View.extend({
     templates : {
-        main : _.template("<section><h1><%=title%></h1><button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button><button class=\"sort-order\"><%=sort_order%></button><table class=\"table\"><thead><tr><th><%= id_num %></th><th><%= name %></th><th><%=score%></th><th><%=time%></th></tr></thead><tbody></tbody></table></section>"),
-        climber : _.template('<tr data-id="<%=climber%>"><td><%= id_num %></td><td><%= name %></td><td><input type="number"  name="score" data-climber="<%=climber%>" value="<%=score%>" /></td><td><input type="number" name="time" data-climber="<%=climber%>" value="<%=time%>" /></td></tr>')
+        main : _.template("<section><h1><%=title%></h1><button class=\"sort-name\"><%=sort_name%></button><button class=\"sort-rank\"><%=sort_rank%></button><button class=\"sort-order\"><%=sort_order%></button><table class=\"table\"><thead><tr><th><%= name %></th><th><%= id_num %></th><th><%=age%></th><th><%=home%></th><th><%=score%></th><th><%=time%></th></tr></thead><tbody></tbody></table></section>"),
+        climber : _.template('<tr data-id="<%=climber%>"><td><%= name %></td><td><%= id_num %></td><td><%=calc_age%></td><td><%=home%></td><td><input type="number"  name="score" data-climber="<%=climber%>" value="<%=score%>" /></td><td><input type="number" name="time" data-climber="<%=climber%>" value="<%=time%>" /></td></tr>')
     },
 
     dict_key : 'SemiFinals',
@@ -320,6 +330,8 @@ Stage.SemiFinals = Backbone.View.extend({
         data.score = data[this.score_attr] || 0;
         data.time  = data[this.time_attr] || 0;
         data.climber = model.id;
+        data.home = data.home || '';
+        data.calc_age = (new Date).getFullYear() - data.age;
 
         return data;
     },

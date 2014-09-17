@@ -44,14 +44,27 @@
             <h3 id="myModalLabel">הוסף מקצה</h3>
         </div>
         <div class="modal-body">
-            <h4>שם</h4>
-            <input type="text" name="name" />
-            <h4>מספר מתמודדים לחצי גמר</h4>
-            <input type="number" name="semi_finals_climbers"/>
-            <h4>מספר מתמודדים לגמר</h4>
-            <input type="number" name="finals_climbers" />
-            <h4>מספר תתי-שלבים (1 או 2)</h4>
-            <input name="semi_final_count" type="number"/>
+
+            <div class="cell">
+                <h4>שם</h4>
+                <input type="text" name="name" />
+            </div>
+
+            <div class="cell">
+                <h4>מספר מתמודדים לחצי גמר</h4>
+                <input type="number" name="semi_finals_climbers"/>
+            </div>
+
+            <div class="cell">
+                <h4>מספר מתמודדים לגמר</h4>
+                <input type="number" name="finals_climbers" />
+            </div>
+
+            <div class="cell">
+                <h4>מספר תתי-שלבים (1 או 2)</h4>
+                <input name="semi_final_count" type="number"/>
+            </div>
+
         </div>
         <div class="modal-footer">
             <button class="btn cancel" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -65,16 +78,33 @@
             <h3 id="myModalLabel">הוסף משתמש</h3>
         </div>
         <div class="modal-body">
-            <h4>שם</h4>
-            <input type="text" name="name" />
-            <h4>ת.ז.</h4>
-            <input type="number" name="id_num"/>
-            <h4>email</h4>
-            <input type="email" name="email"/>
-            <h4>שנת לידה</h4>
-            <input type="number" name="age" />
-            <h4>מקצה</h4>
-            <div class="cat"></div>
+            <div class="cell">
+                <h4>שם</h4>
+                <input type="text" name="name" />
+            </div>
+
+            <div class="cell">
+                <h4>ת.ז.</h4>
+                <input type="text" name="id_num"/>
+            </div>
+
+            <div class="cell">
+                <h4>email</h4>
+                <input type="email" name="email"/>
+            </div>
+
+            <div class="cell">
+                <h4>שנת לידה</h4>
+                <input type="number" name="age" />
+            </div>
+            <div class="cell">
+                <h4>קיר הבית</h4>
+                <input type="text" name="home" />
+            </div>
+            <div class="cell">
+                <h4>מקצה</h4>
+                <div class="cat"></div>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn cancel" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -102,7 +132,9 @@
                 score : 'ניקוד',
                 climbers : 'מתחרים',
                 add : 'הוסף מתחרה',
-                age : 'גיל'
+                birth_year : 'שנת לידה',
+                age : 'גיל',
+                home: 'קיר הבית'
             },
             Category : {
                 add : 'הוסף מקצה',

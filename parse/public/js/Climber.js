@@ -4,7 +4,8 @@ var Climber = Backbone.View.extend({
             <td><input name="name" value="<%=name%>"/></td>\
             <td><input name="id_num" value="<%=id_num%>"/></td>\
             <td><input name="email" value="<%=email%>"/></td>\
-            <td><input name="age" value="<%=age%>" title="<%=real_age %>" /></td>\
+            <td><input name="age" value="<%=age%>" /></td>\
+            <td><input name="home" value="<%=home%>" /></td>\
             <td class="cat"></td>\
             </tr>')
     },
@@ -52,7 +53,7 @@ var ClimberList = Views.List.extend({
         main :  _.template(
                     "<secion class='page climber'><header></header>\
                         <table class='tabel'><thead>\
-                        <th><%=name%></th><th><%=id_num%></th><th><%=email%></th><th><%=age%></th><th><%=cat%></th>\
+                        <th><%=name%></th><th><%=id_num%></th><th><%=email%></th><th><%=birth_year%></th><th><%=home%></th><th><%=cat%></th>\
                         </thead><tbody class='list'></tbody></table>\
                      </section>"
                )
@@ -62,7 +63,8 @@ var ClimberList = Views.List.extend({
     default_data : {
         id_num : 0,
         email : '',
-        age : 0
+        age : 0,
+        home: ''
     },
     type : 'Climber',
     subView : Climber,
