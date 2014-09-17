@@ -1,7 +1,7 @@
 var UglifyJS = require("uglify-js");
 var fs = require('fs');
 var core_list = [
-        "parse/public/bower_components/jquery/dist/jquery.js",
+//        "parse/public/bower_components/jquery/dist/jquery.js",
         "parse/public/bower_components/underscore/underscore.js",
         "parse/public/bower_components/backbone/backbone.js",
         "parse/public/bootstrap/js/bootstrap.js"
