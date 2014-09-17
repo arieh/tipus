@@ -5,8 +5,16 @@ Data.collections = {};
 
 Data.types.forEach(function(type){
     Data.models[type] = Parse.Object.extend(type, {
+        handle : null,
         initialize : function() {
             Data.collections[type].add(this);
+        },
+        save: function () {
+            clearTimeout(this.handle);
+
+            this.handle = setTimeout(function(args){
+                Parse.Object.prototype.save.apply(this, args);
+            }.bind(this, arguments), 500);
         }
     });
     Data.collections[type] = new (Parse.Collection.extend({
