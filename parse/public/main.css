@@ -65,3 +65,20 @@ section.main {
         display: none;
     }
 }
+
+tbody {
+    counter-reset: td-counter;
+}
+
+td:first-child:before {
+    counter-increment: td-counter;
+    content: counter(td-counter) ".";
+    display: block;
+    position: absolute;
+    margin-right: -35px;
+    font-size: 0.9em;
+}
+
+td:first-child {
+    border-right: 1px solid #aaa;
+}
