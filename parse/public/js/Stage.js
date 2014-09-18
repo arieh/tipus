@@ -251,6 +251,8 @@ Stage.PerliminarySort = function(models, min, max) {
         return current - next;
     });
 
+    if (!models.length) return models;
+
     function getScore(index) {
         if (!models[index]) return -1;
         return models[index].attributes.perliminary_score;
@@ -264,7 +266,7 @@ Stage.PerliminarySort = function(models, min, max) {
         max++;
     }
 
-    while (getScore(max) === getScore(max+1)) {
+    while (getScore(max) === getScore(max+1) && max < models.length-1) {
         max++;
     }
 
